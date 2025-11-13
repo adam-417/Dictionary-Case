@@ -1,0 +1,126 @@
+using System;
+using System.Collections.Generic;
+
+public class Student
+{
+    public int ID { get; set; }
+    public string Name { get; set; }
+}
+
+public class StudentManagement
+{
+    private Dictionary<int, Student> students = new Dictionary<int, Student>();
+    private bool running = true;
+
+    public static void Main(string[] args)
+    {
+        StudentManagement studentManagement = new StudentManagement();
+        studentManagement.Run();
+    }
+
+    public void Run()
+    {
+        while (running)
+        {
+            DisplayMenu();
+            int choice = GetUserChoice();
+
+            switch (choice)
+            {
+                case 1:
+                    AddStudent();
+                    break;
+                case 2:
+                    RemoveStudent();
+                    break;
+                case 3:
+                    DisplayAllStudents();
+                    break;
+                case 4:
+                    Exit();
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+            Console.WriteLine("--------------------");
+        }
+    }
+
+    private void DisplayMenu()
+    {
+        Console.WriteLine("Student Management Menu");
+        Console.WriteLine("1 - Add a new student");
+        Console.WriteLine("2 - Remove a student");
+        Console.WriteLine("3 - Display all students");
+        Console.WriteLine("4 - Exit");
+        Console.Write("Choose an option (1-4): ");
+    }
+
+    private int GetUserChoice()
+    {
+        if (int.TryParse(Console.ReadLine(), out int choice))
+        {
+            return choice;
+        }
+        else
+        {
+            return -1; // Indicate invalid input
+        }
+    }
+
+    private void AddStudent()
+    {
+        Console.Write("Enter Student ID (number): ");
+        if (int.TryParse(Console.ReadLine(), out int studentID))
+        {
+            Console.Write("Enter Student Name: ");
+            string studentName = Console.ReadLine();
+
+            Student newStudent = new Student { ID = studentID, Name = studentName };
+            students.Add(studentID, newStudent);
+
+            Console.WriteLine("Student added successfully!");
+        }
+        else
+        {
+            Console.WriteLine("Invalid Student ID. Please enter a number.");
+        }
+    }
+
+    private void RemoveStudent()
+    {
+        Console.Write("Enter the student ID to remove: ");
+        if (int.TryParse(Console.ReadLine(), out int studentID))
+        {
+            if (students.ContainsKey(studentID))
+            {
+                students.Remove(studentID);
+                Console.WriteLine("Student removed successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Student not found.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid Student ID. Please enter a number.");
+        }
+    }
+
+    private void DisplayAllStudents()
+    {
+        Console.WriteLine("--- List of Students ---");
+        foreach (var student in students)
+        {
+            Console.WriteLine($"ID: {student.Key} Name: {student.Value.Name}");
+        }
+    }
+
+    private void Exit()
+    {
+        running = false;
+        Console.WriteLine("Exiting program.");
+    }
+}
